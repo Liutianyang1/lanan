@@ -1,0 +1,49 @@
+@echo off
+setlocal enabledelayedexpansion
+
+set "input_folder=C:\input_folder"
+set "output_folder=C:\output_folder"
+
+for %%F in ("%input_folder%\*.docx") do (
+    echo Converting "%%~nxF" to PDF...
+    "D:\office2016精简版\Office16\WINWORD.EXE" /n /mFilePrintDefault /mFileExit /q "%%F" /mFileSaveAsPdf /mFileExit
+    move "%%~dpnF.pdf" "%output_folder%\"
+)
+
+echo All files converted to PDF.
+
+
+
+
+
+Sub BatchConvertToPDF()
+    Dim inputFolder As String
+    Dim outputFolder As String
+    Dim file As String
+    Dim wps As Object
+    Set wps = CreateObject("kwps.application")
+
+    inputFolder = "C:\input_folder\"
+    outputFolder = "C:\output_folder\"
+
+    file = Dir(inputFolder & "*.docx")
+    Do While file <> ""
+        wps.Documents.Open (inputFolder & file)
+        wps.ActiveDocument.ExportAsFixedFormat (outputFolder & Left(file, Len(file) - 5) & ".pdf"), 17
+        wps.ActiveDocument.Close
+        file = Dir
+    Loop
+
+    wps.Quit
+    Set wps = Nothing
+    MsgBox "All files converted to PDF."
+End Sub
+
+
+
+在这个示例中，我们首先创建了 WPS Office 的应用程序对象，并设置了输入和输出文件夹的路径。然后，我们使用一个循环来遍历输入文件夹中的所有 .docx 文件，并打开、保存为 PDF 并关闭文档。最后，我们关闭 WPS Office 应用程序对象并显示消息框提示转换完成。
+
+你可以在 WPS Office 的 VBA 编辑器中创建一个新的宏，将以上代码粘贴进去并执行。请记得将 inputFolder 和 outputFolder 替换为实际的输入和输出文件夹路径。
+
+希望这个示例能够帮助你批量将 Word 文档转换为 PDF。
+
